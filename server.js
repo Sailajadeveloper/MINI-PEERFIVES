@@ -3,7 +3,7 @@ var app = new express();
 const cors = require('cors')
 
 require("dotenv").config();
-var port = process.env.PORT || 6000;
+var port = process.env.PORT || 2500;
 var router = express.Router();
 
 app.use(express.json())
@@ -16,6 +16,10 @@ let db = require('./models');
 //     alter: true,
 //     // logging: true 
 // });
+
+app.get('/',(req,res)=>{
+    res.send({data: "Rquesting Raised Successfully!"})
+})
 
 require('./routes/userRoutes')(app, router);
 require('./routes/rewardHistoryRoutes')(app, router);
