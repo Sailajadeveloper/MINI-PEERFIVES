@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
           type: DataTypes.INTEGER,
       },
       timestamp: {
-        type: DataTypes.DATE
+        type: DataTypes.DATEONLY
       }
     },
     {
@@ -27,11 +27,11 @@ module.exports = (sequelize, DataTypes) => {
   RewardHistory.associate = (models) => {
     console.log(models, "=====models");
     RewardHistory.belongsTo(models.Users, {
-      foreignKey: 'given_by_id',
+      foreignKey: 'given_by',
       sourceKey: 'id'
     });
     RewardHistory.belongsTo(models.Users, {
-      foreignKey: 'given_to_id',
+      foreignKey: 'given_to',
       sourceKey: 'id'
     });
   };

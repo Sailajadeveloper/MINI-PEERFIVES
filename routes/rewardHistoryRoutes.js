@@ -2,7 +2,8 @@ const rewardHistoryController = require('../controllers/rewardHistoryController'
 // const validationController = require('../controllers/validationController')
 
 module.exports = (app, router) => {
-//   app.get('/', rewardHistoryController.getUsers);
-//   app.post('/new', rewardHistoryController.createUser);
+  router.post('/users/:id/p5', [rewardHistoryController.createP5Transaction]);
+  router.delete('/users/p5/:transaction_id', [rewardHistoryController.deleteP5Transaction]);
+  router.get('/users/:id/rewards', [rewardHistoryController.rewardsHistory]);
   app.use('/',router);
 };

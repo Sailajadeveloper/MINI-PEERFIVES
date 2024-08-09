@@ -30,7 +30,7 @@ exports.createUser = async(req,res)=>{
         const user = await Users.create(reqData);
         console.log(user,"===========create new user========")
         return res.json({
-            result: responseObj(false, 201, successMsg.userCreated, user),
+            result: responseObj(true, 201, successMsg.userCreated, user),
         });
     } catch (err) {
         console.log(err, "====err");
@@ -52,7 +52,7 @@ exports.editUser = async(req,res) => {
             });        
         } else {
             return res.json({
-                result: responseObj(true, 404, errorMsg.notFound, user),
+                result: responseObj(false, 404, errorMsg.notFound, user),
             });
         }
     } catch (err) {
@@ -63,40 +63,3 @@ exports.editUser = async(req,res) => {
     }
 }
 
-exports.p5Transaction = async(req,res) => {
-    const { points, recipient_id } = req.body;
-    const sender = await Users.findByPk(req.params.id);
-    const recipient = await Users.findByPk(recipient_id);
-  
-    if (!sender || !recipient) {
-        return res.json({
-            result: responseObj(false, 400, errorMsg.userNFound),
-        });
-    }
-  
-    if (points > sender.p5_balance) {
-        return res.json({
-            result: responseObj(false, 400, errorMsg.insuffecientP5Bln),
-        });
-    }
-
-    try{
-        // Deducting P5 from sender and adding to recipient's reward
-        sender.p5_balance -= points;
-        recipient.reward_balance += points;
-        await sender.save();
-        await recipient.save();
-
-        // Record the transaction
-        await RewardHistory.create({ points, given_by: sender.id, given_to: recipient.id });
-
-        return res.json({
-            result: responseObj(false, 201, successMsg.p5Created, {sender,recipient}),
-        });
-    }catch(err){
-        console.log(err, "====err");
-        return res.json({
-            result: responseObj(false, 500, messages.SomethingWentWrong, err),
-        });
-    }
-}

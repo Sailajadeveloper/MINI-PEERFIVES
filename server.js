@@ -1,11 +1,13 @@
 const express = require('express')
 var app = new express();  
+const cors = require('cors')
 
 require("dotenv").config();
 var port = process.env.PORT || 6000;
 var router = express.Router();
 
 app.use(express.json())
+app.use(cors())
 
 let db = require('./models');
 

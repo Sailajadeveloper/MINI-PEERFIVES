@@ -26,11 +26,11 @@ module.exports = (sequelize, DataTypes) => {
   Users.associate = (models) => {
     console.log(models, "=====models");
     Users.hasMany(models.RewardHistory, {
-      foreignKey: "given_by_id",
+      foreignKey: "given_by",
       sourceKey: "id",
     });
     Users.hasMany(models.RewardHistory, {
-      foreignKey: "given_to_id",
+      foreignKey: "given_to",
       sourceKey: "id",
     });
   };
