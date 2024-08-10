@@ -17,6 +17,10 @@ let db = require('./models');
 //     // logging: true 
 // });
 
+app.get('/',(req,res)=>{
+    res.send({data: "Rquesting Raised Successfully!"})
+})
+
 require('./routes/userRoutes')(app, router);
 require('./routes/rewardHistoryRoutes')(app, router);
 db.sequelize.authenticate()
