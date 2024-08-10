@@ -11,6 +11,12 @@ module.exports = (sequelize, DataTypes) => {
       given_by: {
           type: DataTypes.INTEGER,
       },
+      given_by_name: {
+          type: DataTypes.STRING
+      },
+      given_to_name: {
+          type: DataTypes.STRING
+      },
       given_to: {
           type: DataTypes.INTEGER,
       },

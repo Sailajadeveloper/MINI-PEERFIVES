@@ -43,10 +43,17 @@ exports.createUser = async(req,res)=>{
 exports.editUser = async(req,res) => {
     try {
         const { user_name } = req.body;
-        const user = await Users.findByPk(req.params.id);
+        let user = await Users.findByPk(req.params.id);
         if (user) {
             user.user_name = user_name;
-            await user.save();
+            user = user.toJSON();
+            await Users.update(user,{
+                where:{
+                    id:req.params.id
+                },
+                returning: true,
+                plain: true
+            });
             return res.json({
                 result: responseObj(true, 205, successMsg.Updated, user),
             });        

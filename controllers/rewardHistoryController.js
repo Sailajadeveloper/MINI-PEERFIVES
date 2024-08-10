@@ -3,8 +3,8 @@ const {Users,RewardHistory} = require('../models');
 const moment = require('moment')
 
 
-exports.createP5Transaction = async(req,res) => {
-    const { points, recipient_id } = req.body;
+exports.createP5Transaction = async (req, res) => {
+    const { points, recipient_id, given_by_name, given_to_name } = req.body;
     let sender = await Users.findByPk(req.params.id);
     let recipient = await Users.findByPk(recipient_id);
   
@@ -20,7 +20,7 @@ exports.createP5Transaction = async(req,res) => {
         });
     }
 
-    try{
+    try {
         // Deducting P5 from sender and adding to recipient's reward
         sender.p5_balance -= points;
         recipient.reward_balance += points;
@@ -44,19 +44,27 @@ exports.createP5Transaction = async(req,res) => {
         );
         const datentime =  moment(new Date()).format('YYYY-MM-DD')
         console.log(datentime,"===============current date")
-        // Record the transaction
-        await RewardHistory.create({ points, given_by: sender.id, given_to: recipient.id, timestamp: datentime });
+        // Record the transaction, including names
+        await RewardHistory.create({ 
+            points, 
+            given_by: sender.id, 
+            given_by_name, // Store the name of the sender
+            given_to: recipient.id, 
+            given_to_name, // Store the name of the recipient
+            timestamp: datentime 
+        });
 
         return res.json({
-            result: responseObj(true, 201, successMsg.p5Created, {sender,recipient}),
+            result: responseObj(true, 201, successMsg.p5Created, {sender, recipient}),
         });
-    }catch(err){
+    } catch(err) {
         console.log(err, "====err");
         return res.json({
             result: responseObj(false, 500, messages.SomethingWentWrong, err),
         });
     }
 }
+
 
 exports.deleteP5Transaction = async(req,res) => {
     const transaction = await RewardHistory.findByPk(req.params.transaction_id);
@@ -104,7 +112,23 @@ exports.deleteP5Transaction = async(req,res) => {
 
 exports.rewardsHistory = async(req,res) =>{
     try{
+        // const history = await RewardHistory.findAll({ where: { given_to: parseInt(req.params.id) } });
         const history = await RewardHistory.findAll({ where: { given_to: parseInt(req.params.id) } });
+        console.log(history,"================history")
+        return res.json({
+            result: responseObj(true, 200, successMsg.historyFound, history),
+        });
+    }catch(err){
+        console.log(err, "====err");
+        return res.json({
+            result: responseObj(false, 500, messages.SomethingWentWrong, err),
+        });
+    }
+}
+exports.pointsHistory = async(req,res) =>{
+    try{
+        // const history = await RewardHistory.findAll({ where: { given_to: parseInt(req.params.id) } });
+        const history = await RewardHistory.findAll({ where: { given_by: parseInt(req.params.id) } });
         console.log(history,"================history")
         return res.json({
             result: responseObj(true, 200, successMsg.historyFound, history),

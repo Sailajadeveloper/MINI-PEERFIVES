@@ -3,7 +3,7 @@ var app = new express();
 const cors = require('cors')
 
 require("dotenv").config();
-var port = process.env.PORT || 6000;
+var port = process.env.PORT || 4002;
 var router = express.Router();
 
 app.use(express.json())
@@ -19,7 +19,6 @@ let db = require('./models');
 
 require('./routes/userRoutes')(app, router);
 require('./routes/rewardHistoryRoutes')(app, router);
-
 db.sequelize.authenticate()
 .then(function (result) {
     app.listen(port, function (err) {
